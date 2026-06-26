@@ -31,7 +31,9 @@ async function personas() {
     if (nk && age != null) { const k = nk + '#' + age; if (!nameAgeMap.has(k)) nameAgeMap.set(k, x); }
   }
   let marked = 0, ins = 0;
-  for (let page = 0; page <= 40; page++) {
+  // El cron solo necesita el delta reciente (ordenado por updated_at desc): los
+  // recién marcados como encontrados aparecen primero. La carga histórica ya se hizo.
+  for (let page = 0; page <= 6; page++) {
     let j; try { j = await get(`/personas?estado=encontrado&limit=200&page=${page}&sort=updated_at&order=desc`); } catch { break; }
     const arr = (j && j.data) || []; if (!arr.length) break;
     for (const p of arr) {
