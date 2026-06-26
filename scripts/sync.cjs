@@ -240,6 +240,9 @@ async function mirrorPhotos(cap = 800) {
   try { console.log(ts, 'ACOPIOS', JSON.stringify(await syncAcopios())); } catch (e) { console.error(ts, 'ACOPIOS_ERR', e.message); }
   try { console.log(ts, 'DTTV', JSON.stringify(await syncDttv())); } catch (e) { console.error(ts, 'DTTV_ERR', e.message); }
   try { console.log(ts, 'DESAPVE', JSON.stringify(await syncDesapVe())); } catch (e) { console.error(ts, 'DESAPVE_ERR', e.message); }
-  try { console.log(ts, 'MIRROR', JSON.stringify(await mirrorPhotos())); } catch (e) { console.error(ts, 'MIRROR_ERR', e.message); }
+  // Mirror de fotos a Postgres DESACTIVADO: las imágenes ya no se guardan como bytea
+  // en la DB (no escala). Las fotos espejadas se sirven como archivos estáticos desde
+  // el VPS (/fotos/) y las nuevas personas usan su URL de origen directamente.
+  // try { console.log(ts, 'MIRROR', JSON.stringify(await mirrorPhotos())); } catch (e) { console.error(ts, 'MIRROR_ERR', e.message); }
   await pool.end();
 })().catch(e => { console.error('FATAL', e.message); process.exit(1); });
