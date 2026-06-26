@@ -6,7 +6,7 @@ const PROTECTED = ['/reportar', '/reportar-persona', '/chat', '/notificaciones',
 
 // API pública de SOLO LECTURA: CORS abierto para que terceros consuman los datos
 // humanitarios (mapas, bots, dashboards). La escritura sigue requiriendo login.
-const PUBLIC_API = ['/api/reports', '/api/persons/list', '/api/persons/stats', '/api/damage/recent'];
+const PUBLIC_API = ['/api/reports', '/api/persons/list', '/api/persons/stats', '/api/damage/recent', '/api/news'];
 const CORS: Record<string, string> = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',

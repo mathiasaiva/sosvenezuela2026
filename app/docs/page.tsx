@@ -41,6 +41,12 @@ const ENDPOINTS: Ep[] = [
    "building_type": "Apartamento / Edificio", "photo_ids": ["/fotos/....jpg"],
    "habitable_votes": 3, "inhabitable_votes": 5, "validations": 8 }]`,
   },
+  {
+    method: 'GET', path: '/api/news',
+    desc: 'Feed de noticias de prensa sobre el terremoto, actualizado automáticamente.',
+    example: `[{ "id": "...", "title": "...", "url": "https://...",
+   "source": "...", "summary": "...", "published_at": "2026-..." }]`,
+  },
 ];
 
 export default function DocsPage() {

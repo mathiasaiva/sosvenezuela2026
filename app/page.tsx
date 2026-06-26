@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSse, HazardEvent, ChatEvent } from './sse-provider';
 import TweetFeed from '@/components/TweetFeed';
 import FoundCarousel from '@/components/FoundCarousel';
+import NewsSection from '@/components/NewsSection';
 
 const MapView = dynamic(() => import('@/components/MapView'), {
   ssr: false,
@@ -107,6 +108,7 @@ export default function LandingPage() {
     { href: '/reportes', label: 'Mapa y reportes' },
     { href: '/buscar', label: 'Buscar persona' },
     { href: '/validar', label: 'Validar daños' },
+    { href: '/noticias', label: 'Noticias' },
     { href: '/recomendaciones', label: 'Primeros auxilios' },
     { href: '/acerca', label: 'Acerca' },
   ];
@@ -397,6 +399,9 @@ export default function LandingPage() {
 
         {/* ── PERSONAS ENCONTRADAS (carrusel) ─────── */}
         <FoundCarousel />
+
+        {/* ── NOTICIAS ──────────────────────────────── */}
+        <NewsSection />
 
         {/* ── CHAT COMUNITARIO (debajo del mapa) ──── */}
         <section className="px-4 max-w-6xl mx-auto mb-12">

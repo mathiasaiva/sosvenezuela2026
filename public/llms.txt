@@ -14,6 +14,7 @@
 - [Inicio y mapa en vivo](https://sosvenezuela2026.com/)
 - [Buscar persona desaparecida](https://sosvenezuela2026.com/buscar)
 - [Validar daño estructural](https://sosvenezuela2026.com/validar)
+- [Noticias del terremoto](https://sosvenezuela2026.com/noticias)
 - [Primeros auxilios](https://sosvenezuela2026.com/recomendaciones)
 - [Privacidad y protección de datos](https://sosvenezuela2026.com/privacidad)
 - [Acerca del proyecto](https://sosvenezuela2026.com/acerca)
@@ -25,6 +26,7 @@
   - `GET /api/persons/list` — directorio de personas (`?q=`, `?estado=`, `?limit=`, `?offset=`)
   - `GET /api/persons/stats` — cifras agregadas (desaparecidos / encontrados)
   - `GET /api/damage/recent` — últimos análisis de daño estructural
+  - `GET /api/news` — feed de noticias de prensa del terremoto
 
 ## Contacto de emergencia
 - Emergencias en Venezuela: 171
