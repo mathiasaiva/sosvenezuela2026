@@ -28,6 +28,15 @@ const VER_BG: Record<string, string> = {
 };
 function esc(s: string) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
+// Clases de sitio NEHRP a partir del Vs30 (USGS Global Vs30). Respuesta sísmica del suelo.
+const SITE: Record<string, { l: string; c: string }> = {
+  E: { l: 'Clase E · suelo muy blando · amplificación muy alta', c: '#DC2626' },
+  D: { l: 'Clase D · suelo blando · amplificación alta', c: '#EA580C' },
+  C: { l: 'Clase C · suelo firme/denso · amplificación moderada', c: '#CA8A04' },
+  B: { l: 'Clase B · roca · amplificación baja', c: '#16A34A' },
+};
+const VS30_TILES = 'https://earthquake.usgs.gov/arcgis/rest/services/eq/vs30_mosaic/MapServer/tile/{z}/{y}/{x}';
+
 function colorFor(r: HazardEvent) {
   if (r.severity && SEV_COLORS[r.severity]) return SEV_COLORS[r.severity];
   if (/shelter|water|aid/.test(r.category)) return '#0D9488';
@@ -73,6 +82,27 @@ export default function MapView({ initialReports, onReportClick, flyTo, hide }: 
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd', maxZoom: 19,
       }).addTo(map);
+
+      // ── Capa de respuesta sísmica del suelo (USGS Global Vs30) ──────────
+      // Microzonificación-proxy: tinte por velocidad de onda de corte (Vs30).
+      // Suelo blando (Vs30 bajo) amplifica más el sismo → mayor riesgo estructural.
+      const vs30 = L.tileLayer(VS30_TILES, {
+        opacity: 0.45, maxNativeZoom: 11, maxZoom: 19, className: 'vs30-layer',
+        attribution: 'Suelo: <a href="https://www.usgs.gov/programs/earthquake-hazards/science/vs30-models-and-data">USGS Global Vs30</a>',
+      });
+      L.control.layers(undefined, { '🌍 Riesgo sísmico del suelo': vs30 }, { position: 'topright', collapsed: false }).addTo(map);
+
+      const legend = new L.Control({ position: 'bottomright' });
+      legend.onAdd = () => {
+        const div = L.DomUtil.create('div');
+        div.style.cssText = 'background:#fff;padding:9px 11px;border-radius:11px;box-shadow:0 3px 10px rgba(0,0,0,.16);font:11px/1.45 system-ui;color:#0F172A;max-width:215px';
+        div.innerHTML = `<div style="font-weight:700;margin-bottom:5px">Amplificación del suelo (Vs30)</div>` +
+          ['E', 'D', 'C', 'B'].map(k => `<div style="display:flex;align-items:center;gap:6px;margin:2px 0"><span style="width:12px;height:12px;border-radius:3px;background:${SITE[k].c};flex:none"></span><span>${esc(SITE[k].l)}</span></div>`).join('') +
+          `<div style="margin-top:6px;color:#64748B;font-size:9.5px">Fuente: USGS Global Vs30. Proxy regional de respuesta de sitio; no sustituye una microzonificación local detallada.</div>`;
+        return div;
+      };
+      map.on('overlayadd', (e: Leaflet.LayersControlEvent) => { if (e.layer === vs30) legend.addTo(map); });
+      map.on('overlayremove', (e: Leaflet.LayersControlEvent) => { if (e.layer === vs30) legend.remove(); });
 
       SISMOS.forEach(s => {
         const icon = L.divIcon({
@@ -141,6 +171,7 @@ export default function MapView({ initialReports, onReportClick, flyTo, hide }: 
           <a href="https://www.google.com/maps/search/?api=1&query=${r.lat_pub},${r.lng_pub}" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:#0D9488;font-weight:600;text-decoration:none;margin-bottom:6px;display:inline-block">📍 ${esc([r.parroquia, r.municipio].filter(Boolean).join(', ') || 'Ubicación aproximada')} · ver en Maps ↗</a>
           <div style="margin-bottom:7px">${verPill}</div>
           ${r.description ? `<div style="font-size:11.5px;color:#374151;line-height:1.45;margin-bottom:8px">${esc(r.description)}</div>` : ''}
+          ${r.site_class && SITE[r.site_class] ? `<div style="display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:8px;padding:5px 8px;border-radius:8px;background:${SITE[r.site_class].c}14;color:${SITE[r.site_class].c}"><span style="font-size:13px">🌍</span><span><b>Suelo:</b> Vs30 ${r.site_vs30} m/s · ${esc(SITE[r.site_class].l)}</span></div>` : ''}
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #F1F5F9;padding-top:7px">
             <span style="font-size:10px;color:#94A3B8">🕒 ${when}</span>
             ${r.source_url ? `<a href="${esc(r.source_url)}" target="_blank" rel="noopener noreferrer" style="font-size:11px;font-weight:700;color:#0D9488;text-decoration:none;background:#F0FDFA;padding:4px 10px;border-radius:8px;white-space:nowrap">🔗 Ver fuente</a>` : ''}

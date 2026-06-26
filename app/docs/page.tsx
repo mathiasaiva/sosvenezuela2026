@@ -14,10 +14,11 @@ interface Ep { method: string; path: string; desc: string; params?: [string, str
 const ENDPOINTS: Ep[] = [
   {
     method: 'GET', path: '/api/reports',
-    desc: 'Últimos 500 reportes en el mapa (edificios colapsados/dañados, fugas de gas, vías, centros de acopio, etc.). Coordenadas truncadas por privacidad (anti-saqueo).',
+    desc: 'Últimos 500 reportes en el mapa (edificios colapsados/dañados, fugas de gas, vías, centros de acopio, etc.). Coordenadas truncadas por privacidad (anti-saqueo). Incluye la respuesta sísmica del suelo: site_vs30 (m/s) y site_class (clase NEHRP B–E, USGS Vs30).',
     example: `[{ "id": "...", "category": "collapsed_building", "severity": "rojo",
    "title": "...", "lat_pub": 10.61, "lng_pub": -67.0,
    "municipio": "...", "verification": "community_confirmed",
+   "site_vs30": 278, "site_class": "D",
    "source_url": "...", "created_at": "2026-..." }]`,
   },
   {

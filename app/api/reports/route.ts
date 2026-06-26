@@ -6,7 +6,7 @@ export async function GET() {
   const res = await pool.query(
     `SELECT id, category, severity, resource_status, verification, title, description,
             lat_pub, lng_pub, municipio, parroquia, building_type,
-            people_trapped_count, source_url, image_url, created_at
+            people_trapped_count, source_url, image_url, site_vs30, site_class, created_at
      FROM hazard_reports
      WHERE deleted_at IS NULL
      ORDER BY created_at DESC

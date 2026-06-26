@@ -2,7 +2,7 @@
 import { useEffect, createContext, useContext, useState, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export interface HazardEvent { id: string; category: string; severity: string; resource_status: string; verification: string; title: string; lat_pub: number; lng_pub: number; municipio: string; parroquia: string; description: string; source_url?: string | null; image_url?: string | null; created_at: string; }
+export interface HazardEvent { id: string; category: string; severity: string; resource_status: string; verification: string; title: string; lat_pub: number; lng_pub: number; municipio: string; parroquia: string; description: string; source_url?: string | null; image_url?: string | null; created_at: string; site_vs30?: number | null; site_class?: string | null; }
 export interface ChatEvent { id: string; body: string; full_name: string; created_at: string; }
 export interface CheckinEvent { id: string; estado: string; msg: string; full_name: string; created_at: string; }
 export interface NotifEvent { id: string; cedula_norm: string; status: string; created_at: string; }
